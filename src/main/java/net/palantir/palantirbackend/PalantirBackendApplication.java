@@ -1,13 +1,13 @@
-package net.palantir.palantir;
+package net.palantir.palantirbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PalantirApplication {
+public class PalantirBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PalantirApplication.class, args);
+		SpringApplication.run(PalantirBackendApplication.class, args);
 	}
 
 }

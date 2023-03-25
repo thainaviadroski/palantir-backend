@@ -1,10 +1,10 @@
-package net.palantir.palantir;
+package net.palantir.palantirbackend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PalantirApplicationTests {
+class PalantirBackendApplicationTests {
 
 	@Test
 	void contextLoads() {
