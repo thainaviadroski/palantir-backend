@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db_palantir'      
+      MYSQL_USER: 'palantir'      
+      MYSQL_ROOT_USER: 'root'      
+      MYSQL_PASSWORD: 'palantir'      
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:      
+      - '3306:3306'
+    expose:      
+      - '3306'      
+    volumes:
+      - v_db_palantir:/var/lib/mysql
+volumes:
+  v_db_palantir:
