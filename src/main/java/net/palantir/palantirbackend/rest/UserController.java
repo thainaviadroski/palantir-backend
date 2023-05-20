@@ -28,7 +28,7 @@ public class UserController {
 	@PostMapping(value = "/user", consumes = {"application/json"})
 	public ResponseEntity<User> createUser(@RequestBody User user) throws URISyntaxException {
 		if (userService.isUserExists(user.getEmail())) {
-			return ResponseEntity.status(200).header("FAIL_CREATE_USER", "E-mail using another user").body(null);
+			return ResponseEntity.status(400).header("FAIL_CREATE_USER", "E-mail using another user").body(user);
 
 		}
 		User u = userRepository.save(user);
