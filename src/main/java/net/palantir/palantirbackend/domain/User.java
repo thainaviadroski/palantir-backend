@@ -1,82 +1,120 @@
 package net.palantir.palantirbackend.domain;
 
 import jakarta.persistence.*;
-import lombok.Generated;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.security.Timestamp;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
-@Generated
+
 @Entity
 @Table(name = "user")
-public class User implements Serializable {
-
-	@jakarta.persistence.Id
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-
-	@Column(name = "email")
-	private String email;
-
-	@Column(name = "pass")
-	private String pass;
-
-	@Column(name = "created")
-	private Date created;
+public class User implements Serializable, UserDetails {
 
 
-	public int getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Column(name = "email")
+    private String email;
 
-	public String getEmail() {
-		return email;
-	}
+    @Column(name = "pass")
+    private String pass;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    @Column(name = "created")
+    private Date created;
 
-	public String getPass() {
-		return pass;
-	}
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles = new ArrayList<>();
 
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public Date getCreated() {
-		return created;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setCreated(Date created) {
-		this.created = created;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-	  	if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		User user = (User) o;
-		return id == user.id && Objects.equals(email, user.email) && Objects.equals(pass, user.pass) && Objects.equals(created, user.created);
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, email, pass, created);
-	}
+    public String getPass() {
+        return pass;
+    }
 
-	@Override
-	public String toString() {
-		return "User{" + "id=" + id + ", email='" + email + '\'' + ", pass='" + pass + '\'' + ", created=" + created + '}';
-	}
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(email, user.email) && Objects.equals(pass, user.pass) && Objects.equals(created, user.created);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, pass, created);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", email='" + email + '\'' + ", pass='" + pass + '\'' + ", created=" + created + '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return pass;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -24,12 +24,4 @@ public class UserService {
 
 	}
 
-	public boolean isUserExists(String email) {
-		User u = userRepository.findOneByEmail(email);
-		if (u == null) {
-			return false;
-		}
-		return true;
-	}
-
 }
