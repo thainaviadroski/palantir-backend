@@ -1,34 +1,27 @@
 package net.palantir.palantirbackend.rest;
 
-import net.palantir.palantirbackend.domain.Login;
 import net.palantir.palantirbackend.domain.User;
 import net.palantir.palantirbackend.repository.UserRepository;
-import net.palantir.palantirbackend.service.TokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
 @RestController
 public class UserController {
 
-    private AuthenticationManager manager;
-
-    private final TokenService tokenService;
     private final UserRepository userRepository;
 
-    public UserController(UserRepository userRepository, TokenService tokenService) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.tokenService = tokenService;
     }
+
 
     @PostMapping(value = "/user", consumes = {"application/json"})
     public ResponseEntity<User> createUser(@RequestBody User user) throws URISyntaxException {
@@ -43,12 +36,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Login login) {
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(login.getUser(), login.getPass());
-        Authentication authenticate = this.manager.authenticate(usernamePasswordAuthenticationToken);
-        var user = (User) authenticate.getPrincipal();
-        return tokenService.genarateToken(user);
+    public ResponseEntity<?> login(@RequestBody User u) {
+        User user = userRepository.findByEmailAndPass(u.getEmail(), u.getPass());
+
+        if (u.getEmail().equalsIgnoreCase(user.getEmail()) && u.getPass().equals(user.getPass())) {
+            System.out.println("Entrou aqui");
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        System.out.println(u.toString());
+        return new ResponseEntity<>("Nao funcionou" + user.toString(), HttpStatus.EXPECTATION_FAILED);
     }
+
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
