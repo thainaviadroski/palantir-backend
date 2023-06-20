@@ -1,82 +1,84 @@
 package net.palantir.palantirbackend.domain;
 
 import jakarta.persistence.*;
-import lombok.Generated;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
-import java.security.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
-@Generated
+
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
 
-	@jakarta.persistence.Id
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 
-	@Column(name = "email")
-	private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name = "pass")
-	private String pass;
+    @Column(name = "email")
+    private String email;
 
-	@Column(name = "created")
-	private Date created;
+    @Column(name = "pass")
+    private String pass;
 
+    @Column(name = "created")
+    private Date created;
 
-	public int getId() {
-		return id;
-	}
+    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles = new ArrayList<>();
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getPass() {
-		return pass;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
+    public String getPass() {
+        return pass;
+    }
 
-	public Date getCreated() {
-		return created;
-	}
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
 
-	public void setCreated(Date created) {
-		this.created = created;
-	}
+    public Date getCreated() {
+        return created;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-	  	if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		User user = (User) o;
-		return id == user.id && Objects.equals(email, user.email) && Objects.equals(pass, user.pass) && Objects.equals(created, user.created);
-	}
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, email, pass, created);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(email, user.email) && Objects.equals(pass, user.pass) && Objects.equals(created, user.created);
+    }
 
-	@Override
-	public String toString() {
-		return "User{" + "id=" + id + ", email='" + email + '\'' + ", pass='" + pass + '\'' + ", created=" + created + '}';
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, pass, created);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", email='" + email + '\'' + ", pass='" + pass + '\'' + ", created=" + created + '}';
+    }
 }
