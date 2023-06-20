@@ -46,6 +46,12 @@ public class ProfileController {
         return Optional.ofNullable(p).map(result -> new ResponseEntity<>(result, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/profile/user")
+    public ResponseEntity<Optional<Profile>> getProfileByUser(@RequestBody User user) {
+        Optional<Profile> p = profileRepository.findByUser(user);
+        return Optional.ofNullable(p).map(result -> new ResponseEntity<>(result, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping("/profiles")
     private ResponseEntity<List<Profile>> getAllProfile() {
         List<Profile> profiles = profileRepository.findAll();
