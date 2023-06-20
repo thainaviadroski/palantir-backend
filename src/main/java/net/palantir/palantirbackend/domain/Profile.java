@@ -19,7 +19,7 @@ public class Profile implements Serializable {
 	@Column(name = "full_name", nullable = false)
 	private String fullName;
 
-	@Column(name = "date_born", nullable = false)
+	@Column(name = "date_born")
 	private Date dateBorn;
 
 

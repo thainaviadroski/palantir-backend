@@ -18,50 +18,51 @@ import java.util.Optional;
 @RestController
 public class ProfileController {
 
-	@Autowired
-	private ProfileService profileService;
-	private final ProfileRepository profileRepository;
-	private final UserRepository userRepository;
+    @Autowired
+    private ProfileService profileService;
+    private final ProfileRepository profileRepository;
+    private final UserRepository userRepository;
 
-	public ProfileController(ProfileRepository profileRepository, UserRepository userRepository) {
-		this.profileRepository = profileRepository;
-		this.userRepository = userRepository;
-	}
+    public ProfileController(ProfileRepository profileRepository, UserRepository userRepository) {
+        this.profileRepository = profileRepository;
+        this.userRepository = userRepository;
+    }
 
-	@PostMapping("/profile")
-	public ResponseEntity<?> createProfile(@RequestBody Profile profile) throws URISyntaxException {
-		System.out.println(profile.toString());
-//		User u =  userRepository.save(profile.getUser());
-//		Profile p = profileRepository.save(profile);
-		return ResponseEntity
-				.created(new URI("/profile/" + profile.getId()))
-				.header("CREATED NEW PROFILE", "A new created !!")
-				.body("BANANA");
-	}
+    @PostMapping("/profile")
+    public ResponseEntity<?> createProfile(@RequestBody Profile profile) throws URISyntaxException {
+        System.out.println(profile.toString());
+        User u = userRepository.save(profile.getUser());
+        profile.setUser(u);
+        Profile p = profileRepository.save(profile);
+        return ResponseEntity
+                .created(new URI("/profile/" + profile.getId()))
+                .header("CREATED NEW PROFILE", "A new created !!")
+                .body(p);
+    }
 
-	@GetMapping("/profile/{id}")
-	public ResponseEntity<Optional<Profile>> getProfile(@PathVariable Long id) {
-		Optional<Profile> p = profileService.getProfile(id);
-		return Optional.ofNullable(p).map(result -> new ResponseEntity<>(result, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<Optional<Profile>> getProfile(@PathVariable Long id) {
+        Optional<Profile> p = profileService.getProfile(id);
+        return Optional.ofNullable(p).map(result -> new ResponseEntity<>(result, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
-	@GetMapping("/profiles")
-	private ResponseEntity<List<Profile>> getAllProfile() {
-		List<Profile> profiles = profileRepository.findAll();
-		return Optional
-				.ofNullable(profiles)
-				.map(p -> new ResponseEntity<>(p, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}
+    @GetMapping("/profiles")
+    private ResponseEntity<List<Profile>> getAllProfile() {
+        List<Profile> profiles = profileRepository.findAll();
+        return Optional
+                .ofNullable(profiles)
+                .map(p -> new ResponseEntity<>(p, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
-	@PutMapping("/profile/{id}")
-	public ResponseEntity<Profile> updateProfile() {
-		return null;
-	}
+    @PutMapping("/profile/{id}")
+    public ResponseEntity<Profile> updateProfile() {
+        return null;
+    }
 
-	@DeleteMapping("/profile/{id}")
-	public void deleteProfile() {
+    @DeleteMapping("/profile/{id}")
+    public void deleteProfile() {
 
-	}
+    }
 
 }
