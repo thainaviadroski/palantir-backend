@@ -38,7 +38,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User u) {
         User user = userRepository.findByEmailAndPass(u.getEmail(), u.getPass());
-
         if (u.getEmail().equalsIgnoreCase(user.getEmail()) && u.getPass().equals(user.getPass())) {
             System.out.println("Entrou aqui");
             return new ResponseEntity<>(user, HttpStatus.OK);
